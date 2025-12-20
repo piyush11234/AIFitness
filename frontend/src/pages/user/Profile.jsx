@@ -107,16 +107,9 @@ const Profile = () => {
     }
   };
 
-  // Calculate BMI
-  const calculateBMI = () => {
-    if (formData.height && formData.weight) {
-      const heightInMeters = formData.height / 100;
-      return (formData.weight / (heightInMeters * heightInMeters)).toFixed(1);
-    }
-    return null;
-  };
+ 
 
-  const bmi = calculateBMI();
+  const bmi = user?.bmi;;
 
   // Get BMI category
   const getBMICategory = (bmi) => {
@@ -153,6 +146,15 @@ const Profile = () => {
             <h1 className="text-3xl font-bold text-white">Welcome back, {user.name}!</h1>
             <p className="text-gray-400 mt-2"> Ready for your next workout?</p>
           </div>
+
+          <Button
+            onClick={()=>navigate('/recommendations')}
+            variant={isEditing ? "outline" : "default"}
+            className="bg-linear-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 border-0"
+          >
+            Recommendation
+          </Button>
+
           <Button
             onClick={() => setIsEditing(!isEditing)}
             variant={isEditing ? "outline" : "default"}
@@ -254,18 +256,18 @@ const Profile = () => {
                       {user.dietType || "Not set"}
                     </Badge>
                   </div>
-                  {bmi && (
+                  {(
                     <>
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-gray-400">BMI</span>
-                        <Badge variant="outline" className={bmiCategory.color}>
-                          {bmi}
+                        <Badge variant="outline" className="border-green-500/50 text-green-400">
+                          {user.bmi}
                         </Badge>
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-gray-400">Category</span>
-                        <span className={`text-sm ${bmiCategory.color}`}>
-                          {bmiCategory.category}
+                        <span className={`text-sm ` + (bmiCategory ? bmiCategory.color : "text-gray-400")}>
+                          {bmiCategory ? bmiCategory.category : "Unknown"}
                         </span>
                       </div>
                     </>

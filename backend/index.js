@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import cors from 'cors'
 import connectDb from './config/db.js';
 import userRoute from './routes/userRoutes.js'
+import featuresRoute from './routes/featureRoutes.js';
 dotenv.config()
 
 const app=express();
@@ -19,6 +20,7 @@ app.use(cors({
 
 //user route
 app.use('/api/v1/user/auth',userRoute)
+app.use('/api/v1/features/',featuresRoute)
 
 connectDb()
 app.listen(PORT,()=>{

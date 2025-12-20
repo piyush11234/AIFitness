@@ -145,26 +145,7 @@ const Login = () => {
               ))}
             </div>
 
-            {/* Testimonial */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1 }}
-              className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700/50"
-            >
-              <div className="flex items-center space-x-4 mb-3">
-                <div className="w-10 h-10 bg-linear-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center">
-                  <Zap className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <div className="text-white font-semibold">Sarah M.</div>
-                  <div className="text-cyan-400 text-sm">Lost 15kg with FitAI</div>
-                </div>
-              </div>
-              <p className="text-gray-300 italic">
-                "The AI personal trainer changed everything! Workouts that actually adapt to my progress and energy levels."
-              </p>
-            </motion.div>
+          
           </motion.div>
         </div>
       </div>

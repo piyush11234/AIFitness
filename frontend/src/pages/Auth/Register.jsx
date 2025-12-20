@@ -92,7 +92,7 @@ const Register = () => {
                         className="max-w-lg"
                     >
                         {/* Logo/Brand */}
-                        <div className="mb-12">
+                        <div className="mb-16">
                             <div className="flex items-center space-x-3 mb-4">
                                 <div className="w-10 h-10 bg-linear-to-r from-cyan-500 to-green-500 rounded-xl flex items-center justify-center">
                                     <Sparkles className="w-6 h-6 text-white" />
@@ -114,7 +114,7 @@ const Register = () => {
                         </div>
 
                         {/* Features List */}
-                        <div className="space-y-4 mb-12">
+                        <div className="space-y-4 mb-65">
                             {features.map((feature, index) => (
                                 <motion.div
                                     key={feature.text}
@@ -132,7 +132,7 @@ const Register = () => {
                         </div>
 
                         {/* Stats */}
-                        <motion.div
+                        {/* <motion.div
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 1 }}
@@ -150,7 +150,8 @@ const Register = () => {
                                 <div className="text-2xl font-bold text-cyan-400">24/7</div>
                                 <div className="text-gray-400 text-sm">AI Support</div>
                             </div>
-                        </motion.div>
+                        </motion.div> */}
+
                     </motion.div>
                 </div>
             </div>

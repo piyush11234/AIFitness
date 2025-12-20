@@ -1,4 +1,6 @@
 import { User } from "../models/userModel.js";
+import { calculateBMI } from "../utils/calculateBMI.js";
+import { calculateCalories } from "../utils/calculateCalories.js";
 
 export const saveOnboardingData = async (req, res) => {
   try {
@@ -28,6 +30,23 @@ export const saveOnboardingData = async (req, res) => {
     user.dietType = dietType || null;
     user.allergies = allergies || [];
     user.hasCompletedOnboarding = true;
+
+    // calculate and save BMI
+    const { bmi, bmiCategory } = calculateBMI(weight, height);
+    user.bmi = bmi;
+    user.bmiCategory = bmiCategory;
+
+
+    const dailyCaloriesNeeded = calculateCalories(
+  gender,
+  weight,
+  height,
+  age,
+  activityLevel,
+  goal
+);
+
+user.dailyCalorieTarget = dailyCaloriesNeeded;
 
     await user.save();
 

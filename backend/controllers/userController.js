@@ -6,6 +6,7 @@ import { Session } from "../models/sessionModel.js";
 import { sendOtpMail } from "../emailVerify/sendOtpMail.js";
 import getDataUri from "../utils/dataUri.js";
 import cloudinary from "../utils/cloudinary.js";
+import { calculateBMI } from "../utils/calculateBMI.js";
 
 
 // export const registerUser = async (req, res) => {
@@ -446,48 +447,78 @@ export const changePassword = async (req, res) => {
 
 
 export const updateProfile = async (req, res) => {
-    try {
-        const userId = req.userId;
-        const { name, age, gender, height, weight, goal, activityLevel, dietType, allergies, preferredWorkoutType } = req.body;
-        const file = req.file;
+  try {
+    const userId = req.userId;
+    const {
+      name, age, gender, height, weight, goal,
+      activityLevel, dietType, allergies, preferredWorkoutType
+    } = req.body;
 
-        const user = await User.findById(userId).select("-password");
-        if (!user) {
-            return res.status(404).json({ success: false, message: "User not found" });
-        }
+    const file = req.file;
 
-        // Upload profile picture if file is provided
-        if (file) {
-            const fileUri = getDataUri(file);
-            const cloudResponse = await cloudinary.uploader.upload(fileUri);
-            user.profilePic = cloudResponse.secure_url;
-        }
-
-        // Update other fields if provided
-        if (name) user.name = name;
-        if (age) user.age = age;
-        if (gender) user.gender = gender;
-        if (height) user.height = height;
-        if (weight) user.weight = weight;
-        if (goal) user.goal = goal;
-        if (activityLevel) user.activityLevel = activityLevel;
-        if (dietType) user.dietType = dietType;
-        if (allergies) user.allergies = allergies;
-        if (preferredWorkoutType) user.preferredWorkoutType = preferredWorkoutType;
-
-        await user.save();
-
-        return res.status(200).json({ 
-            success: true, 
-            message: "Profile updated successfully", 
-            user 
-        });
-
-    } catch (error) {
-        console.error("Update profile error:", error);
-        return res.status(500).json({ 
-            success: false, 
-            message:  "Failed to update profile" 
-        });
+    const user = await User.findById(userId).select("-password");
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found"
+      });
     }
+
+    // Upload profile picture if provided
+    if (file) {
+      const fileUri = getDataUri(file);
+      const cloudResponse = await cloudinary.uploader.upload(fileUri);
+      user.profilePic = cloudResponse.secure_url;
+    }
+
+    // Update allowed fields
+    if (name) user.name = name;
+    if (age) user.age = age;
+    if (gender) user.gender = gender;
+    if (goal) user.goal = goal;
+    if (activityLevel) user.activityLevel = activityLevel;
+    if (dietType) user.dietType = dietType;
+    if (allergies) user.allergies = allergies;
+    if (preferredWorkoutType) user.preferredWorkoutType = preferredWorkoutType;
+
+    // Ensure numeric update for height & weight
+    if (height !== undefined) user.height = Number(height);
+    if (weight !== undefined) user.weight = Number(weight);
+
+    // Recalculate BMI if height or weight is updated
+    if (height !== undefined || weight !== undefined) {
+      const { bmi, bmiCategory } = calculateBMI(user.weight, user.height);
+      user.bmi = bmi;
+      user.bmiCategory = bmiCategory;
+    }
+
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      user
+    });
+
+  } catch (error) {
+    console.error("Update profile error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to update profile"
+    });
+  }
+};
+
+
+
+export const getUserById = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    res.status(200).json({ user });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to fetch user data" });
+  }
 };

@@ -61,14 +61,29 @@ const userSchema = new mongoose.Schema(
             },
         ],
 
+        // bmi
+        bmi: { type: Number, default: null },
+        bmiCategory: { type: String, default: null },
+
+        dailyCalorieTarget: { type: Number, default: null }
+        ,
+
+
+
         // ✅ AI Recommendations
-        aiRecommendations: [
+        // aiRecommendations: [
+        //     {
+        //         date: { type: Date, default: Date.now },
+        //         plan: { type: Object, required: true },  // <-- Stores JSON workout plan
+        //     },
+        // ],
+        workoutPlans: [
             {
-                date: { type: Date, default: Date.now },
-                recommendation: String,
-                focusArea: String, // e.g. "Legs", "Cardio", "Core"
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "WorkoutPlan",
             },
         ],
+
 
         // ✅ Profile Image
         profilePic: {
